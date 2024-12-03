@@ -7,7 +7,7 @@ import java.util.*;
 /**
  *
  * @author: Cameron Balderrama
- * @date: 10/15/2024
+ * @date: 11/25/2024
  */
 
 public class Plant {
@@ -66,14 +66,17 @@ public class Plant {
 
     }
 
+    public void setGrowthStage(GrowthStage stage) {
+    this.stage = stage;
+    }
     // Getters for plant details
-    public int getPlantID() {
+     public int getPlantID() {
         return plantID;
-    }
+     }
 
-    public String getSpecies() {
+     public String getSpecies() {
         return species;
-    }
+     }
 
     public GrowthStage getStage() {
         return stage;

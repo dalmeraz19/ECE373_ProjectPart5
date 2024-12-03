@@ -45,6 +45,18 @@ public class GreenhouseController {
         }
     }
 
+    // Update the value of the TemperatureSensor
+    public void updateTemperatureSensor(float newValue) {
+        for (Sensor sensor : sensors) {
+            if (sensor instanceof TemperatureSensor) {
+                sensor.setValue(newValue); // Update the sensor's value
+                System.out.println("TemperatureSensor updated to: " + newValue);
+                return;
+            }
+        }
+        System.out.println("No TemperatureSensor found.");
+    }
+    
     // Method to monitor the environment
     public void monitorEnvironment() {
         for (Sensor sensor : sensors) {
@@ -81,6 +93,9 @@ public class GreenhouseController {
         sensors.add(sensor);
     }
 
+    public List<Plant> getPlants() {
+        return plants;
+    }
     public void addActuator(Actuator actuator) {
         actuators.add(actuator);
     }
@@ -165,5 +180,3 @@ public class GreenhouseController {
     }
 
 }
-
-    

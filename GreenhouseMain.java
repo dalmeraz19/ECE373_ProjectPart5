@@ -53,9 +53,6 @@ public class GreenhouseMain {
                     Plant newPlant = new Plant(plantID, species, optimalTemp, optimalHumidity, stage, controller.getEnvironmentLog());
                     controller.addPlant(newPlant);
                     System.out.println("Plant added successfully.");
-                    
-                    // Add the plant to the greenhouse
-                    controller.addPlant(newPlant);
                     break;
 
                 case 2:
@@ -97,12 +94,14 @@ public class GreenhouseMain {
                     System.out.println("1. Adjust temperature");
                     System.out.println("2. Adjust humidity");
                     System.out.println("3. Adjust lighting");
+                    System.out.println("4. Adjust Growth Stage");
                     System.out.print("Choose an option: ");
                     int settingChoice = scanner.nextInt();
                     if (settingChoice == 1) {
                         System.out.print("Enter new temperature set point (°C): ");
                         float newTemp = scanner.nextFloat();
-                        controller.adjustTemperature(newTemp);
+                        controller.adjustTemperature(newTemp); // Update the set point
+                        controller.updateTemperatureSensor(newTemp); // Update the sensor value
                     } else if (settingChoice == 2) {
                         System.out.print("Enter new humidity set point (%): ");
                         float newHumidity = scanner.nextFloat();
@@ -111,6 +110,52 @@ public class GreenhouseMain {
                         System.out.print("Enter new light set point (lumens): ");
                         int newLight = scanner.nextInt();
                         controller.adjustLighting(newLight);
+                    } else if (settingChoice == 4) {
+                        System.out.print("Enter the plant ID to change growth stage: ");
+                        int findplantID = scanner.nextInt();
+                        scanner.nextLine(); // Consume newline
+                        
+                         // Find the plant by ID
+                        List<Plant> plants = controller.getPlants();
+                        Plant selectedPlant = null;
+                        for (Plant plant : plants) {
+                            if (plant.getPlantID() == findplantID) {
+                                selectedPlant = plant;
+                                break;
+                            }   
+                        }
+                        
+                        if (selectedPlant != null) {
+                            System.out.println("Current growth stage: " + selectedPlant.getStage());
+                            System.out.println("Choose new growth stage:");
+                            System.out.println("1. Seedling");
+                            System.out.println("2. Vegetative");
+                            System.out.println("3. Flowering");
+                            System.out.println("4. Fruiting");
+                            System.out.println("5. Harvested");
+                            int stageChoice = scanner.nextInt();
+
+                            Plant.GrowthStage newStage = switch (stageChoice) {
+                                case 1 -> Plant.GrowthStage.Seedling;
+                                case 2 -> Plant.GrowthStage.Vegetative;
+                                case 3 -> Plant.GrowthStage.Flowering;
+                                case 4 -> Plant.GrowthStage.Fruiting;
+                                case 5 -> Plant.GrowthStage.Harvested;
+                                default -> null;
+                            };
+
+                            if (newStage != null) {
+                                selectedPlant.setGrowthStage(newStage);
+                                System.out.println("Growth stage updated to: " + newStage);
+                                controller.getEnvironmentLog().recordEnvironmentData("Plant Event","Plant ID: " + selectedPlant.getPlantID() + " growth stage changed to " + newStage);
+                            } else {
+                                System.out.println("Invalid stage selection.");
+                                }
+                        } else {
+                            System.out.println("Plant with ID " + findplantID + " not found.");
+                        }
+                        break;
+                        
                     } else {
                         System.out.println("Invalid option.");
                     }
@@ -180,4 +225,5 @@ public class GreenhouseMain {
 
         scanner.close();
     }
+}
 }
